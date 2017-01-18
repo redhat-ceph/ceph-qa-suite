@@ -20,11 +20,7 @@ def task(ctx, config):
 
     overrides = ctx.config.get('overrides', {})
     teuthology.deep_merge(config, overrides.get('calamari-api', {}))
-    # api_node = ctx.cluster.only(teuthology.get_first_mon(ctx, config))
-    # this line throws error saying cluster has no attribute shortname
-
-    remotes = ctx.cluster.only(teuthology.is_type('mon'))
-    api_node = [remote for remote, roles_for_host in remotes.remotes.iteritems()][0]
+    api_node = ctx.cluster.only(teuthology.get_first_mon(ctx, config))
 
     # clone the repo
 

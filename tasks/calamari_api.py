@@ -21,19 +21,26 @@ def task(ctx, config):
     overrides = ctx.config.get('overrides', {})
     teuthology.deep_merge(config, overrides.get('calamari-api', {}))
     api_node = ctx.cluster.only(teuthology.get_first_mon(ctx, config))
+
     # clone the repo
+
     api_node.run(args=['sudo', 'rm', '-rf', 'api-tests'], check_status=False)
     api_node.run(args=['sudo', 'rm', '-rf', run.Raw('/tmp/apilog*')], check_status=False)
     api_node.run(args=['mkdir', 'api-tests'])
     api_node.run(args=['cd', 'api-tests', run.Raw(';'), 'git', 'clone',
                  'http://gitlab.osas.lab.eng.rdu2.redhat.com/ceph/ceph-qe-scripts.git'])
-    # restart calamari due to bz
+
     api_node.run(args=['sudo', run.Raw('calamari-ctl'), 'initialize', run.Raw('--admin-username admin'),
-                 run.Raw('--admin-password admin'), run.Raw('--admin-email api@redhat.com')])
+                       run.Raw('--admin-password admin123'), run.Raw('--admin-email api@redhat.com')])
+
+    # restart calamari due to bz
+
     api_node.run(args=['sudo', 'service', 'supervisord', 'restart'])
     api_node.run(args=['sudo',  'supervisorctl', 'restart', 'all'])
+
     api_node.run(args=['cd', 'api-tests/ceph-qe-scripts/calamari/api_test_cases',
                        run.Raw(';'), run.Raw('sh run_calamari_tests.sh')], timeout=600)
+
     try:
         yield
     finally:

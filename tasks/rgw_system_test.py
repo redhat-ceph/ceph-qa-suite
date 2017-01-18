@@ -475,6 +475,7 @@ def task(ctx, config):
         data = dict(
             config=dict(
                 objects_count=test_config['objects_count'],
+                bucket_count=test_config['bucket_count'],
                 user_count=test_config['user_count'],
                 objects_size_range=dict(
                     min=test_config['min_file_size'],

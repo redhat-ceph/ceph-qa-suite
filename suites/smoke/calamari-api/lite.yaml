@@ -7,9 +7,7 @@ overrides:
       journal_collocation: true
       journal_size: 1024
       osd_auto_discovery: false
-    group_vars:
-      all:
-        ceph_conf_overrides:
+      ceph_conf_overrides:
           global: 
             osd_default_pool_size: 2
             osd pool default pg num:  128

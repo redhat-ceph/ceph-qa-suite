@@ -12,8 +12,7 @@ overrides:
             osd_default_pool_size: 2
             osd pool default pg num:  128
             osd pool default pgp num:  128
-      mons: 
-        calamari: true
+      calamari: true
 roles:
 - - osd.0
   - osd.1

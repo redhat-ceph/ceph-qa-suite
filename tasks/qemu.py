@@ -249,9 +249,14 @@ def run_qemu(ctx, config):
                      '/dev/vdb', '-s', '/dev/vdc']
         xfs_cmd.extend(xfs_param)
         xfs_out = StringIO()
-        remote.run(args=xfs_cmd, stdout=xfs_out)
+        remote.run(args=xfs_cmd, stdout=xfs_out, check_status=False)
         yield
     finally:
+            kill_qemu = ['sudo', 'pkill', 'qemu']
+            remote.run(args=kill_qemu, check_status=False)
+            remote.run(args=['ps', '-ef', run.Raw('|'), 'grep', 'qemu'])
+            if 'Failures:' in xfs_out.getvalue():
+                log.info("Failures seen during xfs tests")
             log.info("xfs tests completed")
 
 
